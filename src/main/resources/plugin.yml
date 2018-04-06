@@ -1,10 +1,10 @@
-name: MobEggDrops
+name: MobEggDrops-ItemExchange
 version: @version@
 main: com.meronat.mobeggdrops.MobEggDrops
 prefix: MED
-authors: [Meronat]
-description: Allows mobs to drop their respective mob egg with a configurable percent chance.
-website: http://meronat.com
+authors: [Meronat, jonthesquirrel]
+description: Killing a mob will exchange a configurable item in your off-hand for the respective mob egg.
+website: https://github.com/jonthesquirrel/MobEggDrops-ItemExchange
 
 commands:
   med:

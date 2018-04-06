@@ -29,6 +29,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -50,6 +51,18 @@ public final class EntityDeathListener implements Listener {
             if (event.getEntity().getKiller() == null || !event.getEntity().getKiller().hasPermission("mobeggdrops.drops")) {
                 return;
             }
+        }
+
+        if (!(event.getEntity().getKiller() instanceof Player)) {
+            return;
+        }
+
+        // make sure player has exchange-item-amount of exchange-item in off-hand
+        ItemStack currentOffHand = event.getEntity().getKiller().getInventory().getItemInOffHand();
+        Material exchangeItem = Material.valueOf(plugin.getConfig().getString("exchange-item"));
+        int exchangeItemAmount = plugin.getConfig().getInt("exchange-item-amount");
+        if (currentOffHand.getType() != exchangeItem || currentOffHand.getAmount() < exchangeItemAmount) {
+            return;
         }
 
         EntityType type = event.getEntityType();
@@ -81,6 +94,11 @@ public final class EntityDeathListener implements Listener {
         egg.setItemMeta(meta);
 
         egg.setAmount(1);
+
+        // remove exchange-item-amount of exchange-item from player's off-hand
+        ItemStack newOffHand = currentOffHand.clone();
+        newOffHand.setAmount(currentOffHand.getAmount() - exchangeItemAmount);
+        event.getEntity().getKiller().getInventory().setItemInOffHand(newOffHand);
 
         event.getDrops().add(egg);
     }
